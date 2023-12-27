@@ -4,6 +4,7 @@ package org.example;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Welcome to Hotel Reservation Program");
+        System.out.println("Welcome to the Hotel Reservation Program");
+        
     }
 }
