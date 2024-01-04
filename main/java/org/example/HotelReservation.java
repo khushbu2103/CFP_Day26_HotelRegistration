@@ -12,7 +12,6 @@ public class HotelReservation {
     public HotelReservation(String hotelName, Double price) {
         this.hotelName = hotelName;
         this.price = price;
-
     }
     public static HotelReservation createHotel(String hotelName, Double price) {
         return new HotelReservation(hotelName, price);
@@ -30,5 +29,4 @@ public class HotelReservation {
             System.out.println(ob.hotelName + " " + ob.price);
         }
     }
-
 }

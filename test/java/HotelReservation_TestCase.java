@@ -9,7 +9,5 @@ public class HotelReservation_TestCase {
         HotelReservation ob = new HotelReservation("Lakewood",110.0);//actual
         Assert.assertEquals("Lakewood", ob.hotelName);
         Assert.assertEquals(110.0, ob.price);
-
-
     }
 }
