@@ -5,6 +5,6 @@ package org.example;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to the Hotel Reservation Program");
-        
+        //HotelReservation ob = new HotelReservation("Lakrewood", "80.0");
     }
 }
