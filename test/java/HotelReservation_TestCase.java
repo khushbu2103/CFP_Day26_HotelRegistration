@@ -79,7 +79,7 @@ public class HotelReservation_TestCase {
         }
     }
     @Test
-    public void UC4getRating_Validation()
+    public void UC5_getRating_Validation()
     {
         HotelReservation ob1=new HotelReservation("Lakewood",110.0,parseDate("10/sep/2020"),parseDate("11/sep/2020"), 90.0, 110.0,3);//actual
         HotelReservation ob2=new HotelReservation("Bridgewood", 160.0,parseDate("10/sep/2020"),parseDate("11/sep/2020"), 50.0, 150.0, 4);//actual
@@ -87,6 +87,14 @@ public class HotelReservation_TestCase {
         Assert.assertEquals(3, ob1.rating);
         Assert.assertEquals(4, ob2.rating);
         Assert.assertEquals(5, ob3.rating);
+    }
+    @Test
+    public void UC6_getCheapestHotelWithBestRating_Validation()
+    {
+        HotelReservation ob1=new HotelReservation("Lakewood",110.0,parseDate("10/sep/2020"),parseDate("11/sep/2020"), 90.0, 110.0,3);//actual
+        Assert.assertEquals("Lakewood", ob1.hotelName);
+        Assert.assertEquals(110.0, ob1.price, 0.01);
+        Assert.assertEquals(3, ob1.rating);
     }
 
 }

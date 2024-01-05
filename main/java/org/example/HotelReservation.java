@@ -38,7 +38,7 @@ public class HotelReservation {
         return cheap;
     }
     public static void main(String[] args) {
-        HotelReservation ob1 = createHotel("Lakewood", 110.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 90.0, 110.0, 3);
+        HotelReservation ob1 = createHotel("Lakewood", 110.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 80.0, 110.0, 3);
         HotelReservation ob2 = createHotel("Bridgewood", 160.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 50.0, 150.0, 4);
         HotelReservation ob3 = createHotel("Ridgewood", 210.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 150.0, 220.0, 5);
         HashMap<String, HotelReservation> hm = new HashMap<>();
@@ -55,7 +55,7 @@ public class HotelReservation {
         showHotelByDateRange(hm, rangeStartDate, rangeEndDate);
         HotelReservation cheap=cheapHotel(hm, rangeStartDate, rangeEndDate);
         if (cheap != null) {
-            System.out.println("Cheapest Hotel: " + cheap.hotelName +" " + cheap.calRate(rangeStartDate, rangeEndDate));
+            System.out.println("Cheapest Hotel: " + cheap.hotelName+ " rating: " + cheap.rating +" " + cheap.calRate(rangeStartDate, rangeEndDate));
         } else {
             System.out.println("No Hotels Found...!!!");
         }
