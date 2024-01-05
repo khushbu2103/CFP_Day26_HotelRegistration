@@ -13,16 +13,18 @@ public class HotelReservation {
     public static Date endDate;
     public Double weekendRate;
     public Double weekdayRate;
-    public HotelReservation(String hotelName, Double price, Date startDate, Date endDate, Double weekendRate, Double weekdayRate) {
+    public int rating;
+    public HotelReservation(String hotelName, Double price, Date startDate, Date endDate, Double weekendRate, Double weekdayRate, int rating) {
         this.hotelName = hotelName;
         this.price = price;
         this.startDate=startDate;
         this.endDate=endDate;
         this.weekendRate = weekendRate;
         this.weekdayRate = weekdayRate;
+        this.rating = rating;
     }
-    public static HotelReservation createHotel(String hotelName, Double price,Date startDate, Date endDate, Double weekendRate, Double weekdayRate) {
-        return new HotelReservation(hotelName, price, startDate, endDate, weekendRate, weekdayRate);
+    public static HotelReservation createHotel(String hotelName, Double price,Date startDate, Date endDate, Double weekendRate, Double weekdayRate, int rating) {
+        return new HotelReservation(hotelName, price, startDate, endDate, weekendRate, weekdayRate, rating);
     }
     public static HotelReservation cheapHotel(HashMap<String, HotelReservation>hm, Date startDate, Date endDate)
     {
@@ -36,9 +38,9 @@ public class HotelReservation {
         return cheap;
     }
     public static void main(String[] args) {
-        HotelReservation ob1 = createHotel("Lakewood", 110.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 90.0, 110.0);
-        HotelReservation ob2 = createHotel("Bridgewood", 160.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 50.0, 150.0);
-        HotelReservation ob3 = createHotel("Ridgewood", 210.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 150.0, 220.0);
+        HotelReservation ob1 = createHotel("Lakewood", 110.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 90.0, 110.0, 3);
+        HotelReservation ob2 = createHotel("Bridgewood", 160.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 50.0, 150.0, 4);
+        HotelReservation ob3 = createHotel("Ridgewood", 210.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 150.0, 220.0, 5);
         HashMap<String, HotelReservation> hm = new HashMap<>();
         hm.put(ob1.hotelName, ob1);
         hm.put(ob2.hotelName, ob2);
