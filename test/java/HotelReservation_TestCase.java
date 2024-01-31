@@ -1,6 +1,8 @@
 import org.example.HotelReservation;
 import junit.framework.Assert;
 import org.junit.Test;
+
+import java.util.Date;
 import java.util.HashMap;
 
 import static org.example.HotelReservation.*;
@@ -95,6 +97,34 @@ public class HotelReservation_TestCase {
         Assert.assertEquals("Lakewood", ob1.hotelName);
         Assert.assertEquals(110.0, ob1.price, 0.01);
         Assert.assertEquals(3, ob1.rating);
+    }
+    @Test
+    public void UC7_Best_Rated_Hotel() {
+        HotelReservation ob1 = new HotelReservation("Lakewood", 110.0, parseDate("10/sep/2020"), parseDate("11/sep/2020"), 90.0, 110.0, 3);
+        HotelReservation ob2 = new HotelReservation("Bridgewood", 160.0, parseDate("10/sep/2020"), parseDate("11/sep/2020"), 50.0, 150.0, 4);
+        HotelReservation ob3 = new HotelReservation("Ridgewood", 210.0, parseDate("10/sep/2020"), parseDate("11/sep/2020"), 150.0, 220.0, 5);
+
+        // Create a HashMap with the hotels
+        HashMap<String, HotelReservation> hm = new HashMap<>();
+        hm.put(ob1.hotelName, ob1);
+        hm.put(ob2.hotelName, ob2);
+        hm.put(ob3.hotelName, ob3);
+
+        // Specify the date range
+        Date rangeStartDate = parseDate("11/sep/2020");
+        Date rangeEndDate = parseDate("12/sep/2020");
+
+        // Call the method to find the best-rated hotel
+        HotelReservation bestRated = HotelReservation.bestRatedHotel(hm, rangeStartDate, rangeEndDate);
+
+        // Assert the result
+        if (bestRated != null) {
+            Assert.assertEquals("Ridgewood", bestRated.hotelName);
+            Assert.assertEquals(5, bestRated.rating);
+            Assert.assertEquals(370.0, bestRated.calRate(rangeStartDate, rangeEndDate), 0.01);
+        } else {
+            Assert.fail("No best-rated hotel found.");
+        }
     }
 
 }

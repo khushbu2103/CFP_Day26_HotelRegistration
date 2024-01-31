@@ -37,6 +37,21 @@ public class HotelReservation {
         }
         return cheap;
     }
+    public static HotelReservation bestRatedHotel(HashMap<String, HotelReservation> hm, Date startDate, Date endDate) {
+        HotelReservation bestRated = null;
+        int highestRating = Integer.MIN_VALUE;
+
+        for (HotelReservation hotel : hm.values()) {
+            if (isDateRangeOverlap(startDate, endDate, hotel.startDate, hotel.endDate)) {
+                if (hotel.rating > highestRating || (hotel.rating == highestRating && hotel.calRate(startDate, endDate) < bestRated.calRate(startDate, endDate))) {
+                    bestRated = hotel;
+                    highestRating = hotel.rating;
+                }
+            }
+        }
+
+        return bestRated;
+    }
     public static void main(String[] args) {
         HotelReservation ob1 = createHotel("Lakewood", 110.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 80.0, 110.0, 3);
         HotelReservation ob2 = createHotel("Bridgewood", 160.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 50.0, 150.0, 4);
@@ -56,6 +71,13 @@ public class HotelReservation {
         HotelReservation cheap=cheapHotel(hm, rangeStartDate, rangeEndDate);
         if (cheap != null) {
             System.out.println("Cheapest Hotel: " + cheap.hotelName+ " rating: " + cheap.rating +" " + cheap.calRate(rangeStartDate, rangeEndDate));
+        } else {
+            System.out.println("No Hotels Found...!!!");
+        }
+        HotelReservation bestRated = bestRatedHotel(hm, rangeStartDate, rangeEndDate);
+
+        if (bestRated != null) {
+            System.out.println("Best Rated Hotel: " + bestRated.hotelName + " rating: " + bestRated.rating + " " + bestRated.calRate(rangeStartDate, rangeEndDate));
         } else {
             System.out.println("No Hotels Found...!!!");
         }
