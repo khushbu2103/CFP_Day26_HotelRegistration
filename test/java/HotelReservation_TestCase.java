@@ -126,5 +126,4 @@ public class HotelReservation_TestCase {
             Assert.fail("No best-rated hotel found.");
         }
     }
-
 }
