@@ -13,8 +13,10 @@ public class HotelReservation {
     public static Date endDate;
     public Double weekendRate;
     public Double weekdayRate;
+    public Double rewardWeekendRate;
+    public Double rewardWeekdayRate;
     public int rating;
-    public HotelReservation(String hotelName, Double price, Date startDate, Date endDate, Double weekendRate, Double weekdayRate, int rating) {
+    public HotelReservation(String hotelName, Double price, Date startDate, Date endDate, Double weekendRate, Double weekdayRate, int rating,  Double rewardWeekendRate, Double rewardWeekdayRate) {
         this.hotelName = hotelName;
         this.price = price;
         this.startDate=startDate;
@@ -22,17 +24,20 @@ public class HotelReservation {
         this.weekendRate = weekendRate;
         this.weekdayRate = weekdayRate;
         this.rating = rating;
+        this.rewardWeekendRate = rewardWeekendRate;
+        this.rewardWeekdayRate = rewardWeekdayRate;
     }
-    public static HotelReservation createHotel(String hotelName, Double price,Date startDate, Date endDate, Double weekendRate, Double weekdayRate, int rating) {
-        return new HotelReservation(hotelName, price, startDate, endDate, weekendRate, weekdayRate, rating);
+    public static HotelReservation createHotel(String hotelName, Double price,Date startDate, Date endDate, Double weekendRate, Double weekdayRate, int rating,  Double rewardWeekendRate,
+                                               Double rewardWeekdayRate) {
+        return new HotelReservation(hotelName, price, startDate, endDate, weekendRate, weekdayRate, rating, rewardWeekendRate, rewardWeekdayRate);
     }
     public static HotelReservation cheapHotel(HashMap<String, HotelReservation>hm, Date startDate, Date endDate)
     {
         HotelReservation cheap=null;
         for(HotelReservation hotel:hm.values())
         {
-            double totalRate = hotel.calRate(startDate, endDate);
-            if(cheap == null || totalRate < cheap.calRate(startDate, endDate))
+            double totalRate = hotel.calRate(startDate, endDate, true);
+            if(cheap == null || totalRate < cheap.calRate(startDate, endDate, true))
                 cheap=hotel;
         }
         return cheap;
@@ -103,7 +108,7 @@ public class HotelReservation {
             return null;
         }
     }
-    public double calRate(Date startDate, Date endDate) {
+    public double calRate(Date startDate, Date endDate, boolean isRewardCustomer) {
         int weekdays = 0;
         int weekends = 0;
         Date currentDate = startDate;
@@ -115,6 +120,10 @@ public class HotelReservation {
                 weekends++;
             currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
         }
-        return (weekdays * weekdayRate + weekends * weekendRate);
+        if (isRewardCustomer) {
+            return weekdays * rewardWeekdayRate + weekends * rewardWeekendRate;
+        } else {
+            return weekdays * weekdayRate + weekends * weekendRate;
+        }
     }
 }
