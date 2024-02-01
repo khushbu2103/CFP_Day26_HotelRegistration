@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Date;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class HotelReservation {
+    private static final Pattern DATE_PATTERN = Pattern.compile("\\d{2}/[a-zA-Z]{3}/\\d{4}");
     public String hotelName;
     public Double price;
     public static Date startDate;
@@ -45,6 +47,19 @@ public class HotelReservation {
                         .thenComparingDouble(hotel -> hotel.calRate(startDate, endDate, isRewardCustomer)))
                 .orElse(null);
     }
+    public static HotelReservation cheapBestRatedHotelForRegularCustomer(Map<String, HotelReservation> hotels, Date startDate, Date endDate) {
+        return hotels.values().stream()
+                .filter(hotel -> hotel.isWithinDateRange(startDate, endDate))
+                .min(Comparator.comparingInt(HotelReservation::getRating)
+                        .thenComparingDouble(hotel -> hotel.calRate(startDate, endDate, false)))
+                .orElse(null);
+    }
+
+    public boolean isWithinDateRange(Date startDate, Date endDate) {
+        return (startDate.equals(this.startDate) || startDate.after(this.startDate)) &&
+                (endDate.equals(this.endDate) || endDate.before(this.endDate));
+    }
+
     public int getRating() {
         return rating;
     }
