@@ -162,8 +162,8 @@ public class HotelReservation_TestCase {
         Date rangeEndDate = parseDate("12/Sep/2020");
 
         try {
-            HotelReservation cheap = HotelReservation.cheapHotel(hm, rangeStartDate, rangeEndDate, true);
-            HotelReservation bestRated = HotelReservation.bestRatedHotel(hm, rangeStartDate, rangeEndDate, true);
+            HotelReservation cheap = HotelReservation.cheapHotel(hm, rangeStartDate, rangeEndDate);
+            HotelReservation bestRated = HotelReservation.bestRatedHotel(hm, rangeStartDate, rangeEndDate);
 
             assertEquals("Ridgewood", cheap.hotelName);
             assertEquals(5, cheap.rating);
@@ -187,6 +187,44 @@ public class HotelReservation_TestCase {
         Date invalidStartDate = parseDate("12/Sep/2020");
         Date invalidEndDate = parseDate("11/Sep/2020");
 
-        HotelReservation.cheapHotel(hm, invalidStartDate, invalidEndDate);
+        HotelReservation.cheapHotel(hm, invalidStartDate, invalidEndDate, true);
     }
+    @Test
+    public void UC11_CheapestBestRatedHotelForRegularCustomer() {
+        HotelReservation ob1 = new HotelReservation("Lakewood", 110.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 90.0, 110.0, 3, 80.0, 80.0);
+        HotelReservation ob2 = new HotelReservation("Bridgewood", 160.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 50.0, 150.0, 4, 50.0, 100.0);
+        HotelReservation ob3 = new HotelReservation("Ridgewood", 210.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 150.0, 220.0, 5, 40.0, 100.0);
+        HashMap<String, HotelReservation> hm = new HashMap<>();
+        hm.put(ob1.hotelName, ob1);
+        hm.put(ob2.hotelName, ob2);
+        hm.put(ob3.hotelName, ob3);
+
+        Date rangeStartDate = parseDate("11/Sep/2020");
+        Date rangeEndDate = parseDate("12/Sep/2020");
+
+        try {
+            HotelReservation cheap = HotelReservation.cheapHotel(hm, rangeStartDate, rangeEndDate, false);
+            HotelReservation bestRated = HotelReservation.bestRatedHotel(hm, rangeStartDate, rangeEndDate, false);
+
+            assertEquals("Bridgewood", cheap.hotelName);
+            assertEquals(4, cheap.rating);
+            assertEquals(200.0, cheap.calRate(rangeStartDate, rangeEndDate, false), 0.01);
+
+            assertEquals("Ridgewood", bestRated.hotelName);
+            assertEquals(5, bestRated.rating);
+            assertEquals(370.0, bestRated.calRate(rangeStartDate, rangeEndDate, false), 0.01);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void UC11_InvalidDateRange() {
+        HotelReservation ob1 = new HotelReservation("Lakewood", 110.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 90.0, 110.0, 3, 80.0, 80.0);
+        HashMap<String, HotelReservation> hm = new HashMap<>();
+        hm.put(ob1.hotelName, ob1);
+        Date invalidStartDate = parseDate("12/Sep/2020");
+        Date invalidEndDate = parseDate("11/Sep/2020");
+        HotelReservation.cheapHotel(hm, invalidStartDate, invalidEndDate, false);
+    }
+
 }

@@ -27,40 +27,31 @@ public class HotelReservation {
         this.rewardWeekendRate = rewardWeekendRate;
         this.rewardWeekdayRate = rewardWeekdayRate;
     }
-    public static HotelReservation createHotel(String hotelName, Double price,Date startDate, Date endDate, Double weekendRate, Double weekdayRate, int rating,  Double rewardWeekendRate,
-                                               Double rewardWeekdayRate) {
-        return new HotelReservation(hotelName, price, startDate, endDate, weekendRate, weekdayRate, rating, rewardWeekendRate, rewardWeekdayRate);
-    }
-    public static HotelReservation cheapHotel(HashMap<String, HotelReservation>hm, Date startDate, Date endDate)
-    {
-        HotelReservation cheap=null;
-        for(HotelReservation hotel:hm.values())
-        {
-            double totalRate = hotel.calRate(startDate, endDate, true);
-            if(cheap == null || totalRate < cheap.calRate(startDate, endDate, true))
-                cheap=hotel;
-        }
-        return cheap;
-    }
-    public static HotelReservation bestRatedHotel(HashMap<String, HotelReservation> hm, Date startDate, Date endDate) {
-        HotelReservation bestRated = null;
-        int highestRating = Integer.MIN_VALUE;
+    public static HotelReservation cheapHotel(HashMap<String, HotelReservation> hm, Date startDate, Date endDate, boolean isRewardCustomer) {
+        validateDateRange(startDate, endDate);
 
-        for (HotelReservation hotel : hm.values()) {
-            if (isDateRangeOverlap(startDate, endDate, hotel.startDate, hotel.endDate)) {
-                if (hotel.rating > highestRating || (hotel.rating == highestRating && hotel.calRate(startDate, endDate, true) < bestRated.calRate(startDate, endDate, true))) {
-                    bestRated = hotel;
-                    highestRating = hotel.rating;
-                }
-            }
-        }
+        return hm.values()
+                .stream()
+                .min(Comparator.comparingDouble(hotel -> hotel.calRate(startDate, endDate, isRewardCustomer)))
+                .orElse(null);
+    }
+    public static HotelReservation bestRatedHotel(HashMap<String, HotelReservation> hm, Date startDate, Date endDate, boolean isRewardCustomer) {
+        validateDateRange(startDate, endDate);
 
-        return bestRated;
+        return hm.values()
+                .stream()
+                .filter(hotel -> isDateRangeOverlap(startDate, endDate, hotel.startDate, hotel.endDate))
+                .max(Comparator.comparingInt(HotelReservation::getRating)
+                        .thenComparingDouble(hotel -> hotel.calRate(startDate, endDate, isRewardCustomer)))
+                .orElse(null);
+    }
+    public int getRating() {
+        return rating;
     }
     public static void main(String[] args) {
-        HotelReservation ob1 = createHotel("Lakewood", 110.0, parseDate("10/Sep/2020"), parseDate("11/Sep/2020"), 80.0, 110.0, 3, 80.0, 80.0);
-        HotelReservation ob2 = createHotel("Bridgewood", 160.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 50.0, 150.0, 4, 50.0, 100.0);
-        HotelReservation ob3 = createHotel("Ridgewood", 210.0,parseDate("10/sep/2020"), parseDate("11/sep/2020"), 150.0, 220.0, 5, 40.0, 100.0);
+        HotelReservation ob1 = new HotelReservation("Lakewood", 110.0, parseDate("10/sep/2020"), parseDate("11/sep/2020"), 90.0, 110.0, 3, 80.0, 80.0);
+        HotelReservation ob2 = new HotelReservation("Bridgewood", 160.0, parseDate("10/sep/2020"), parseDate("11/sep/2020"), 50.0, 150.0, 4, 50.0, 100.0);
+        HotelReservation ob3 = new HotelReservation("Ridgewood", 210.0, parseDate("10/sep/2020"), parseDate("11/sep/2020"), 150.0, 220.0, 5, 40.0, 100.0);
         HashMap<String, HotelReservation> hm = new HashMap<>();
         hm.put(ob1.hotelName, ob1);
         hm.put(ob2.hotelName, ob2);
@@ -80,19 +71,15 @@ public class HotelReservation {
             Date rangeStartDate = parseDate("11/Sep/2020");
             Date rangeEndDate = parseDate("12/Sep/2020");
             validateDateRange(rangeStartDate, rangeEndDate);
-            HotelReservation cheap = cheapHotel(hm, rangeStartDate, rangeEndDate);
-            if (cheap != null) {
-                System.out.println("Cheapest Hotel: " + cheap.hotelName + " rating: " + cheap.rating + " " + cheap.calRate(rangeStartDate, rangeEndDate, true));
-            } else {
-                System.out.println("No Hotels Found...!!!");
-            }
+            HotelReservation cheap = cheapHotel(hm, rangeStartDate, rangeEndDate, true);
+            System.out.println(cheap != null
+                    ? "Cheapest Hotel: " + cheap.hotelName + " rating: " + cheap.rating + " " + cheap.calRate(rangeStartDate, rangeEndDate, true)
+                    : "No Hotels Found...!!!");
 
-            HotelReservation bestRated = bestRatedHotel(hm, rangeStartDate, rangeEndDate);
-            if (bestRated != null) {
-                System.out.println("Best Rated Hotel: " + bestRated.hotelName + " rating: " + bestRated.rating + " " + bestRated.calRate(rangeStartDate, rangeEndDate, true));
-            } else {
-                System.out.println("No Hotels Found...!!!");
-            }
+            HotelReservation bestRated = bestRatedHotel(hm, rangeStartDate, rangeEndDate, true);
+            System.out.println(bestRated != null
+                    ? "Best Rated Hotel: " + bestRated.hotelName + " rating: " + bestRated.rating + " " + bestRated.calRate(rangeStartDate, rangeEndDate, true)
+                    : "No Hotels Found...!!!");
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
